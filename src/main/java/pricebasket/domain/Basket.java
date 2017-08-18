@@ -32,6 +32,13 @@ public class Basket {
         return offerDiscounts;
     }
 
+    private void computeDiscounts() {
+        for (Map.Entry<Offer, BigDecimal> offer : offerDiscounts.entrySet()) {
+            BigDecimal discount = offer.getKey().getOfferDiscount(this.productCount);
+            offer.setValue(discount);
+        }
+    }
+
     public BigDecimal getSubtotal() {
         BigDecimal subTotal = BigDecimal.valueOf(0);
 
@@ -43,17 +50,9 @@ public class Basket {
         return subTotal;
     }
 
-    private void computeDiscounts() {
-        for (Map.Entry<Offer, BigDecimal> offer : offerDiscounts.entrySet()) {
-            BigDecimal discount = offer.getKey().getOfferDiscount(this.productCount);
-            offer.setValue(discount);
-        }
-    }
-
     public BigDecimal getTotal() {
         BigDecimal total = getSubtotal();
 
-        computeDiscounts();
         BigDecimal totalDiscount = BigDecimal.ZERO;
         for (BigDecimal discount : offerDiscounts.values()) {
             totalDiscount = totalDiscount.add(discount);
